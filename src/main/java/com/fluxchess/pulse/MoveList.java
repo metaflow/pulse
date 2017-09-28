@@ -46,7 +46,7 @@ final class MoveList<T extends MoveList.MoveEntry> {
 				entries[i] = clazz.newInstance();
 			}
 		} catch (InstantiationException | IllegalAccessException e) {
-			throw new IllegalStateException(e);
+			throw new ChessException(e);
 		}
 	}
 

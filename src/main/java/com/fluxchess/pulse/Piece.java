@@ -74,7 +74,7 @@ final class Piece {
 					case KING:
 						return WHITE_KING;
 					default:
-						throw new IllegalArgumentException();
+						throw new ChessException("Illegal piece type " + piecetype);
 				}
 			case BLACK:
 				switch (piecetype) {
@@ -91,10 +91,10 @@ final class Piece {
 					case KING:
 						return BLACK_KING;
 					default:
-						throw new IllegalArgumentException();
+						throw new ChessException("Illegal piece type " + piecetype);
 				}
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal color " + color);
 		}
 	}
 
@@ -119,7 +119,7 @@ final class Piece {
 			case BLACK_KING:
 				return KING;
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal piece " + piece);
 		}
 	}
 
@@ -140,7 +140,7 @@ final class Piece {
 			case BLACK_KING:
 				return BLACK;
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal piece " + piece);
 		}
 	}
 }

@@ -145,7 +145,7 @@ public final class Pulse extends AbstractEngine implements Protocol {
 			}
 
 			if (!found) {
-				throw new IllegalArgumentException();
+				throw new ChessException("Generic move not found " + genericMove);
 			}
 		}
 
@@ -310,7 +310,7 @@ public final class Pulse extends AbstractEngine implements Protocol {
 						Notation.fromPieceType(Move.getPromotion(move))
 				);
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal move type " + type);
 		}
 	}
 }

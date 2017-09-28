@@ -28,7 +28,7 @@ final class Notation {
 		try {
 			return toPosition(new GenericBoard(fen));
 		} catch (IllegalNotationException e) {
-			throw new IllegalArgumentException(e);
+			throw new ChessException(e);
 		}
 	}
 
@@ -137,7 +137,7 @@ final class Notation {
 			case BLACK:
 				return BLACK;
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal generic color " + genericColor);
 		}
 	}
 
@@ -149,7 +149,7 @@ final class Notation {
 				return GenericColor.BLACK;
 			case NOCOLOR:
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal color " + color);
 		}
 	}
 
@@ -169,7 +169,7 @@ final class Notation {
 				return GenericChessman.KING;
 			case NOPIECETYPE:
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal piece type " + piecetype);
 		}
 	}
 
@@ -200,7 +200,7 @@ final class Notation {
 			case BLACKKING:
 				return BLACK_KING;
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal generic piece " + genericPiece);
 		}
 	}
 
@@ -232,7 +232,7 @@ final class Notation {
 				return GenericPiece.BLACKKING;
 			case NOPIECE:
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal piece " + piece);
 		}
 	}
 
@@ -244,7 +244,7 @@ final class Notation {
 				return GenericCastling.QUEENSIDE;
 			case NOCASTLINGTYPE:
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal castling type " + castlingtype);
 		}
 	}
 
@@ -267,7 +267,7 @@ final class Notation {
 			case Fh:
 				return h;
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal generic file " + genericFile);
 		}
 	}
 
@@ -291,7 +291,7 @@ final class Notation {
 				return GenericFile.Fh;
 			case NOFILE:
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal file " + file);
 		}
 	}
 
@@ -314,7 +314,7 @@ final class Notation {
 			case R8:
 				return r8;
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal generic rank " + genericRank);
 		}
 	}
 
@@ -338,7 +338,7 @@ final class Notation {
 				return GenericRank.R8;
 			case NORANK:
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal rank " + rank);
 		}
 	}
 

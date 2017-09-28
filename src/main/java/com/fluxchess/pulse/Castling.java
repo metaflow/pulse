@@ -34,7 +34,7 @@ final class Castling {
 					case QUEENSIDE:
 						return WHITE_QUEENSIDE;
 					default:
-						throw new IllegalArgumentException();
+						throw new ChessException("Illegal castling type " + castlingtype);
 				}
 			case BLACK:
 				switch (castlingtype) {
@@ -43,10 +43,10 @@ final class Castling {
 					case QUEENSIDE:
 						return BLACK_QUEENSIDE;
 					default:
-						throw new IllegalArgumentException();
+						throw new ChessException("Illegal castling type " + castlingtype);
 				}
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal color " + color);
 		}
 	}
 }

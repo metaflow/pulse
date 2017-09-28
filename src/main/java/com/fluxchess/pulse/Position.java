@@ -263,7 +263,7 @@ final class Position {
 					rookTargetSquare = d8;
 					break;
 				default:
-					throw new IllegalArgumentException();
+					throw new ChessException("Illegal target square " + targetSquare);
 			}
 
 			int rookPiece = remove(rookOriginSquare);
@@ -336,7 +336,7 @@ final class Position {
 					rookTargetSquare = d8;
 					break;
 				default:
-					throw new IllegalArgumentException();
+					throw new ChessException("Illegal target square " + targetSquare);
 			}
 
 			int rookPiece = remove(rookTargetSquare);

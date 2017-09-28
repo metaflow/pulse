@@ -57,7 +57,7 @@ final class PieceType {
 			case KING:
 				return false;
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal piece type " + piecetype);
 		}
 	}
 
@@ -76,7 +76,7 @@ final class PieceType {
 			case KING:
 				return KING_VALUE;
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal piece type " + piecetype);
 		}
 	}
 }

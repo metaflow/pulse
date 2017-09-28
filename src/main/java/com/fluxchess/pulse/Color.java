@@ -27,7 +27,7 @@ final class Color {
 			case BLACK:
 				return WHITE;
 			default:
-				throw new IllegalArgumentException();
+				throw new ChessException("Illegal color " + color);
 		}
 	}
 }
