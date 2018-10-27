@@ -12,7 +12,8 @@
 namespace pulse {
 
 bool Value::isCheckmate(int value) {
-	int absvalue = std::abs(value);
+  int absvalue = value;
+  if (absvalue < 0) absvalue *= -1;
 	return absvalue >= CHECKMATE_THRESHOLD && absvalue <= CHECKMATE;
 }
 

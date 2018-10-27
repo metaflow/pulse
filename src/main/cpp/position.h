@@ -16,6 +16,7 @@
 #include "depth.h"
 
 #include <random>
+#include <vector>
 
 namespace pulse {
 
@@ -31,8 +32,10 @@ public:
 	int enPassantSquare = Square::NOSQUARE;
 	int activeColor = Color::WHITE;
 	int halfmoveClock = 0;
+  std::vector<int> touched;
 
 	uint64_t zobristKey = 0;
+  std::vector<int> moves;
 
 	Position();
 
@@ -74,6 +77,8 @@ public:
 
 	bool isAttacked(int targetSquare, int attackerColor);
 
+  bool isPromoted(int square);
+
 private:
 	class Zobrist {
 	public:
@@ -108,6 +113,7 @@ private:
 	// Later we will restore them before undoing a move.
 	std::array<State, MAX_MOVES> states;
 	int statesSize = 0;
+  std::vector<bool> promoted;
 
 	Zobrist& zobrist;
 
