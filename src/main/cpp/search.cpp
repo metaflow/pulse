@@ -181,7 +181,7 @@ void Search::reset() {
 }
 
 void Search::start() {
-	std::unique_lock<std::recursive_mutex> lock(sync);
+	// std::unique_lock<std::recursive_mutex> lock(sync);
 
 	if (!running) {
 		wakeupSignal.release();
@@ -190,7 +190,7 @@ void Search::start() {
 }
 
 void Search::stop() {
-	std::unique_lock<std::recursive_mutex> lock(sync);
+	// std::unique_lock<std::recursive_mutex> lock(sync);
 
 	if (running) {
 		// Signal the search thread that we want to stop it
@@ -201,7 +201,7 @@ void Search::stop() {
 }
 
 void Search::ponderhit() {
-	std::unique_lock<std::recursive_mutex> lock(sync);
+	// std::unique_lock<std::recursive_mutex> lock(sync);
 
 	if (running) {
 		// Enable time management
@@ -217,7 +217,7 @@ void Search::ponderhit() {
 }
 
 void Search::quit() {
-	std::unique_lock<std::recursive_mutex> lock(sync);
+	// std::unique_lock<std::recursive_mutex> lock(sync);
 
 	stop();
 

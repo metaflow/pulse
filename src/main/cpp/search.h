@@ -102,7 +102,7 @@ private:
 	Semaphore wakeupSignal;
 	Semaphore runSignal;
 	Semaphore stopSignal;
-	std::recursive_mutex sync;
+	// std::recursive_mutex sync;
 	Protocol& protocol;
 	bool running = false;
 	bool shutdown = false;

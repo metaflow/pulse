@@ -54,9 +54,9 @@ void dfs(std::shared_ptr<Position>                           p,
     std::shared_ptr<Position> t(new Position(*p));
     t->makeMove(m);
     int originPiece = Move::getOriginPiece(m);
-    if ((originPiece != Piece::WHITE_PAWN && t->touched[originPiece] > 1) ||
-        t->touched[originPiece] > 2)
-      continue;
+    // if ((originPiece != Piece::WHITE_PAWN && t->touched[originPiece] > 1) ||
+        // t->touched[originPiece] > 2)
+      // continue;
     MoveGenerator             bg;
     std::shared_ptr<Position> y(new Position(*p));
     y->makeMove(m);
@@ -173,7 +173,7 @@ void Pulse::run() {
   std::unordered_map<int, std::shared_ptr<Position>> z;
   int                                                max_moves = 0;
   int                                                d = 1;
-  while (z.size() < 7) {
+  while (z.size() < 3 and d < 4) {
     std::cout << "max depth " << d << std::endl;
     std::unordered_set<std::string> visited;
     dfs(p, z, d, visited);
