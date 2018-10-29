@@ -1,0 +1,4 @@
+#!/bin/sh
+perf record -g -F 1000 ./run
+perf script | ../FlameGraph/stackcollapse-perf.pl > out.perf-folded
+cat out.perf-folded | ../FlameGraph/flamegraph.pl > perf-kernel.svg

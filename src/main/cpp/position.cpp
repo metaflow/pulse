@@ -445,6 +445,12 @@ bool Position::isCheck(int color) {
                     Color::opposite(color));
 }
 
+bool Position::isCheckR(int color) {
+    // Check whether the king for color is attacked by any opponent piece after own move.
+    return isAttackedR(Bitboard::next(pieces[color][PieceType::KING]),
+                      Color::opposite(color));
+}
+
 /**
  * Returns whether the targetSquare is attacked by any piece from the
  * attackerColor. We will backtrack from the targetSquare to find the piece.
@@ -486,6 +492,21 @@ bool Position::isAttacked(int targetSquare, int attackerColor) {
          || isAttacked(targetSquare,
                        Piece::valueOf(attackerColor, PieceType::KING),
                        Square::kingDirections);
+}
+
+bool Position::isAttackedR(int targetSquare, int attackerColor) {
+  return
+         // The queen moves like a bishop, so check both piece types
+         isAttacked(targetSquare,
+                       Piece::valueOf(attackerColor, PieceType::BISHOP),
+                       Piece::valueOf(attackerColor, PieceType::QUEEN),
+                       Square::bishopDirections)
+
+         // The queen moves like a rook, so check both piece types
+         || isAttacked(targetSquare,
+                       Piece::valueOf(attackerColor, PieceType::ROOK),
+                       Piece::valueOf(attackerColor, PieceType::QUEEN),
+                        Square::rookDirections);
 }
 
 /**

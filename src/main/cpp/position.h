@@ -74,8 +74,10 @@ public:
 	bool isCheck();
 
 	bool isCheck(int color);
+	bool isCheckR(int color);
 
 	bool isAttacked(int targetSquare, int attackerColor);
+	bool isAttackedR(int targetSquare, int attackerColor);
 
   bool isPromoted(int square);
 
@@ -120,7 +122,6 @@ private:
 	void clearCastling(int square);
 
 	bool isAttacked(int targetSquare, int attackerPiece, const std::vector<int>& directions);
-
 	bool isAttacked(int targetSquare, int attackerPiece, int queenPiece, const std::vector<int>& directions);
 };
 

@@ -19,9 +19,15 @@ MoveList<MoveEntry>& MoveGenerator::getLegalMoves(Position& position, int depth,
 		int move = legalMoves.entries[i]->move;
 
 		position.makeMove(move);
-		if (!position.isCheck(Color::opposite(position.activeColor))) {
+    if (Piece::getType(Move::getOriginPiece(move)) == PieceType::KING) {
+      if (!position.isCheck(Color::opposite(position.activeColor))) {
+        legalMoves.entries[legalMoves.size++]->move = move;
+		}
+    } else {
+		if (!position.isCheckR(Color::opposite(position.activeColor))) {
 			legalMoves.entries[legalMoves.size++]->move = move;
 		}
+    }
 		position.undoMove(move);
 	}
 
