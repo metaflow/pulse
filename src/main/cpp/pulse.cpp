@@ -46,9 +46,9 @@ void dfs(std::shared_ptr<Position>                           p,
   if (depth < 0) return;
   MoveGenerator             moveGenerator;
   std::shared_ptr<Position> y(new Position(*p));
-  MoveList<MoveEntry>& moves = moveGenerator.getLegalMoves(*y, 1, y->isCheck());
+  MoveEntryList& moves = moveGenerator.getLegalMoves(*y, 1, y->isCheck());
   for (int i = 0; i < moves.size; i++) {
-    int                       m = moves.entries[i]->move;
+    int                       m = moves.entries[i].move;
     auto                      wsource = toXY(Move::getOriginSquare(m));
     auto                      wtarget = toXY(Move::getTargetSquare(m));
     std::shared_ptr<Position> t(new Position(*p));
@@ -59,11 +59,12 @@ void dfs(std::shared_ptr<Position>                           p,
       // continue;
     std::shared_ptr<Position> y(new Position(*p));
     y->makeMove(m);
-    MoveList<MoveEntry>& bmoves = moveGenerator.getLegalMoves(*y, 1, y->isCheck());
+    MoveGenerator ym;
+    MoveEntryList& bmoves = ym.getLegalMoves(*y, 1, y->isCheck());
     // find symmeric move for black.
     int w = Move::NOMOVE;
     for (int j = 0; j < bmoves.size; j++) {
-      int  bm = bmoves.entries[j]->move;
+      int  bm = bmoves.entries[j].move;
       auto bsource = toXY(Move::getOriginSquare(bm));
       auto btarget = toXY(Move::getTargetSquare(bm));
       if (bsource.first != wsource.first || btarget.first != wtarget.first ||
@@ -178,111 +179,6 @@ void Pulse::run() {
     dfs(p, z, d, visited);
     d++;
   }
-  while (z.size() < 0 && q.size() > 0) {
-    auto p = q.front();
-    timer++;
-    if (p->moves.size() > max_moves) {
-      max_moves = p->moves.size();
-      std::cout << timer << " iterations ";
-      std::cout << max_moves << " moves" << std::endl;
-    }
-    q.pop();
-    // if (timer++ % 1000 == 0) {
-    // std::cout << Notation::fromPosition(*p) << " move# "
-    // << p->getFullmoveNumber() << std::endl;
-    // }
-    MoveGenerator             moveGenerator;
-    std::shared_ptr<Position> y(new Position(*p));
-    MoveList<MoveEntry>&      moves =
-        moveGenerator.getLegalMoves(*y, 1, y->isCheck());
-    // std::cout << moves.size << " white moves" << std::endl;
-    for (int i = 0; i < moves.size; i++) {
-      int                       m = moves.entries[i]->move;
-      auto                      wsource = toXY(Move::getOriginSquare(m));
-      auto                      wtarget = toXY(Move::getTargetSquare(m));
-      std::shared_ptr<Position> t(new Position(*p));
-      t->makeMove(m);
-      int originPiece = Move::getOriginPiece(m);
-      if ((originPiece != Piece::WHITE_PAWN && t->touched[originPiece] > 1) ||
-          t->touched[originPiece] > 2)
-        continue;
-      MoveGenerator             bg;
-      std::shared_ptr<Position> y(new Position(*p));
-      y->makeMove(m);
-      MoveList<MoveEntry>& bmoves = bg.getLegalMoves(*y, 1, y->isCheck());
-      // find symmerix move for black.
-      int w = Move::NOMOVE;
-      for (int j = 0; j < bmoves.size; j++) {
-        int  bm = bmoves.entries[j]->move;
-        auto bsource = toXY(Move::getOriginSquare(bm));
-        auto btarget = toXY(Move::getTargetSquare(bm));
-        if (bsource.first != wsource.first || btarget.first != wtarget.first ||
-            (bsource.second != 7 - wsource.second) ||
-            (btarget.second != 7 - wtarget.second))
-          continue;
-        if (Move::getType(m) == MoveType::PAWNPROMOTION) {
-          if (Move::getPromotion(m) != Move::getPromotion(bm)) { continue; }
-        }
-        w = bm;
-      }
-      if (w == Move::NOMOVE) {
-        // checkmate?
-        if (t->isCheck() && bmoves.size == 0) {
-          int piece = Move::getOriginPiece(m);
-          if (t->isPromoted(Move::getTargetSquare(m))) piece = Piece::NOPIECE;
-          if (z.count(piece)) continue;
-          auto s = Notation::fromPosition(*t);
-          std::cout << std::endl;
-          std::cout << "checkmate ";
-          if (piece != Piece::NOPIECE)
-            std::cout << Notation::fromPiece(piece);
-          else
-            std::cout << Notation::fromPiece(Move::getOriginPiece(m))
-                      << " promoted";
-          std::cout << std::endl;
-          std::cout << s << std::endl;
-          std::cout << "promoted squares ";
-          for (int i = 0; i < Square::VALUES_LENGTH; i++) {
-            if (t->isPromoted(i)) std::cout << Notation::fromSquare(i) << ' ';
-          }
-          std::cout << std::endl;
-          // std::cout << t->movedPawns << " pawns touched" << std::endl;
-          printMove(m);
-          std::cout << t->moves.size() << " moves" << std::endl;
-          int turn = 1;
-          for (auto x : t->moves) {
-            turn++;
-            if (turn % 2 == 0) std::cout << ' ' << turn / 2 << ".";
-            std::cout << " ";
-            int type = Piece::getType(Move::getOriginPiece(x));
-            if (type != PieceType::PAWN) {
-              std::cout << Notation::fromPieceType(type);
-            }
-            std::cout << Notation::fromSquare(Move::getOriginSquare(x));
-            if (Move::getTargetPiece(x) != Piece::NOPIECE) { std::cout << 'x'; }
-            std::cout << Notation::fromSquare(Move::getTargetSquare(x));
-            if (Move::getType(x) == MoveType::PAWNPROMOTION) {
-              std::cout << '=' << Notation::fromPiece(Move::getPromotion(x));
-            }
-            if (Move::getType(x) == MoveType::CASTLING) {
-              std::cout << "CASTLING!!!" << std::endl;
-            }
-          }
-          std::cout << "#" << std::endl;
-          z.emplace(piece, new Position(*t));
-          std::cout << "found " << z.size() << " answers " << std::endl;
-        }
-      } else {
-        t->makeMove(w);
-        auto s = Notation::fromPosition(*t);
-        if (!visited.count(s)) {
-          q.emplace(new Position(*t));
-          // q.emplace(t);
-          visited.emplace(s);
-        }
-      }
-    }
-  }
   receiveQuit();
 }
 
@@ -358,11 +254,11 @@ void Pulse::receivePosition(std::istringstream& input) {
 
   while (input >> token) {
     // Verify moves
-    MoveList<MoveEntry>& moves = moveGenerator.getLegalMoves(
+    MoveEntryList& moves = moveGenerator.getLegalMoves(
         *currentPosition, 1, currentPosition->isCheck());
     bool found = false;
     for (int i = 0; i < moves.size; i++) {
-      int move = moves.entries[i]->move;
+      int move = moves.entries[i].move;
       if (fromMove(move) == token) {
         currentPosition->makeMove(move);
         found = true;

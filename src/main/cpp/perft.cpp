@@ -58,9 +58,9 @@ uint64_t Perft::miniMax(int depth, Position& position, int ply) {
 
 	bool isCheck = position.isCheck();
 	MoveGenerator& moveGenerator = moveGenerators[ply];
-	MoveList<MoveEntry>& moves = moveGenerator.getMoves(position, depth, isCheck);
+	MoveEntryList& moves = moveGenerator.getMoves(position, depth, isCheck);
 	for (int i = 0; i < moves.size; i++) {
-		int move = moves.entries[i]->move;
+		int move = moves.entries[i].move;
 
 		position.makeMove(move);
 		if (!position.isCheck(Color::opposite(position.activeColor))) {

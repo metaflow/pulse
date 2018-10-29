@@ -35,6 +35,8 @@ public:
 	void rateFromMVVLVA();
 };
 
+
+
 class MoveVariation {
 public:
 	std::array<int, Depth::MAX_PLY> moves;
@@ -46,6 +48,14 @@ public:
 	int move = Move::NOMOVE;
 	int value = Value::NOVALUE;
 };
+class MoveEntryList {
+  private:
+    static const int MAX_MOVES = 256;
+
+  public:
+    std::array<MoveEntry, MAX_MOVES> entries;
+    int size = 0;
+  };
 
 class RootEntry : public MoveEntry {
 public:
