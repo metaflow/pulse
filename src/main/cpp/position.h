@@ -32,7 +32,7 @@ public:
 	int enPassantSquare = Square::NOSQUARE;
 	int activeColor = Color::WHITE;
 	int halfmoveClock = 0;
-  std::vector<int> touched;
+  // std::vector<int> touched;
 
 	uint64_t zobristKey = 0;
   std::vector<int> moves;
@@ -64,12 +64,14 @@ public:
 	bool hasInsufficientMaterial();
 
 	void put(int piece, int square);
-
 	int remove(int square);
-
 	void makeMove(int move);
+	// void undoMove(int move);
 
-	void undoMove(int move);
+  void putR(int piece, int square);
+	int removeR(int square);
+	void makeMoveR(int move);
+	void undoMoveR(int move);
 
 	bool isCheck();
 
@@ -82,6 +84,7 @@ public:
   bool isPromoted(int square);
 
 private:
+  /*
 	class Zobrist {
 	public:
 		std::array<std::array<uint64_t, Square::VALUES_LENGTH>, Piece::VALUES_SIZE> board;
@@ -107,17 +110,18 @@ private:
 		int halfmoveClock = 0;
 	};
 
+  */
 	static const int MAX_MOVES = Depth::MAX_PLY + 1024;
 
 	int halfmoveNumber = 2;
 
 	// We will save some position parameters in a State before making a move.
 	// Later we will restore them before undoing a move.
-	std::array<State, MAX_MOVES> states;
-	int statesSize = 0;
+	// std::array<State, MAX_MOVES> states;
+	// int statesSize = 0;
   std::vector<bool> promoted;
 
-	Zobrist& zobrist;
+	// Zobrist& zobrist;
 
 	void clearCastling(int square);
 

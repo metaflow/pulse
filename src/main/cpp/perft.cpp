@@ -66,7 +66,7 @@ uint64_t Perft::miniMax(int depth, Position& position, int ply) {
 		if (!position.isCheck(Color::opposite(position.activeColor))) {
 			totalNodes += miniMax(depth - 1, position, ply + 1);
 		}
-		position.undoMove(move);
+		position.undoMoveR(move);
 	}
 
 	return totalNodes;

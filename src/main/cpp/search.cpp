@@ -292,7 +292,7 @@ void Search::searchRoot(int depth, int alpha, int beta) {
 
 		position.makeMove(move);
 		int value = -search(depth - 1, -beta, -alpha, ply + 1);
-		position.undoMove(move);
+		position.undoMoveR(move);
 
 		if (abort) {
 			return;

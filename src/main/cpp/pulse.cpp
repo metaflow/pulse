@@ -40,7 +40,7 @@ void printMove(int m) {
   std::cout << std::endl;
 }
 
-void dfs(std::shared_ptr<Position>                           p,
+void dfs(std::unique_ptr<Position>                           p,
          std::unordered_map<int, std::shared_ptr<Position>>& z, int depth,
          std::unordered_set<std::string>& visited) {
   if (depth < 0) return;
@@ -51,16 +51,16 @@ void dfs(std::shared_ptr<Position>                           p,
     int                       m = moves.entries[i].move;
     auto                      wsource = toXY(Move::getOriginSquare(m));
     auto                      wtarget = toXY(Move::getTargetSquare(m));
-    std::shared_ptr<Position> t(new Position(*p));
+    std::unique_ptr<Position> t(new Position(*p));
     t->makeMove(m);
     int originPiece = Move::getOriginPiece(m);
     // if ((originPiece != Piece::WHITE_PAWN && t->touched[originPiece] > 1) ||
         // t->touched[originPiece] > 2)
       // continue;
-    std::shared_ptr<Position> y(new Position(*p));
-    y->makeMove(m);
+    // std::shared_ptr<Position> y(new Position(*p));
+    // y->makeMove(m);
     MoveGenerator ym;
-    MoveEntryList& bmoves = ym.getLegalMoves(*y, 1, y->isCheck());
+    MoveEntryList& bmoves = ym.getLegalMoves(*t, 1, t->isCheck());
     // find symmeric move for black.
     int w = Move::NOMOVE;
     for (int j = 0; j < bmoves.size; j++) {
@@ -128,7 +128,8 @@ void dfs(std::shared_ptr<Position>                           p,
       auto s = Notation::fromPosition(*t);
       if (!visited.count(s)) {
         visited.emplace(s);
-        dfs(std::make_shared<Position>(*t), z, depth - 1, visited);
+        std::unique_ptr<Position> a(new Position(*t));
+        dfs(std::move(a), z, depth - 1, visited);
       }
     }
   }
@@ -163,9 +164,7 @@ void Pulse::run() {
       break;
     }
   }
-  std::unordered_set<std::string>       visited;
   std::queue<std::shared_ptr<Position>> q;
-  std::shared_ptr<Position> p = std::make_shared<Position>(Notation::toPosition(Notation::STANDARDPOSITION));
   // q.emplace(new Position(Notation::toPosition(Notation::STANDARDPOSITION)));
   // q.emplace(new Position(
   // Notation::toPosition("1k1r2Q1/ppp1P3/8/8/8/8/PPP1p3/1K1R2q1 w - -")));
@@ -176,7 +175,8 @@ void Pulse::run() {
   while (z.size() < 3 and d < 5) {
     std::cout << "max depth " << d << std::endl;
     std::unordered_set<std::string> visited;
-    dfs(p, z, d, visited);
+    std::unique_ptr<Position> p(new Position(Notation::toPosition(Notation::STANDARDPOSITION)));
+    dfs(std::move(p), z, d, visited);
     d++;
   }
   receiveQuit();

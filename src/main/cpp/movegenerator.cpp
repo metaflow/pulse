@@ -18,7 +18,7 @@ MoveEntryList& MoveGenerator::getLegalMoves(Position& position, int depth, bool 
 	for (int i = 0; i < size; i++) {
 		int move = legalMoves.entries[i].move;
 
-		position.makeMove(move);
+		position.makeMoveR(move);
     if (Piece::getType(Move::getOriginPiece(move)) == PieceType::KING) {
       if (!position.isCheck(Color::opposite(position.activeColor))) {
         legalMoves.entries[legalMoves.size++].move = move;
@@ -28,7 +28,7 @@ MoveEntryList& MoveGenerator::getLegalMoves(Position& position, int depth, bool 
 			legalMoves.entries[legalMoves.size++].move = move;
 		}
     }
-		position.undoMove(move);
+		position.undoMoveR(move);
 	}
 
 	return legalMoves;
@@ -42,10 +42,10 @@ MoveEntryList& MoveGenerator::getMoves(Position& position, int depth, bool isChe
 
 		addMoves(moves, position);
 
-		if (!isCheck) {
-			int square = Bitboard::next(position.pieces[position.activeColor][PieceType::KING]);
-			addCastlingMoves(moves, square, position);
-		}
+		// if (!isCheck) {
+			// int square = Bitboard::next(position.pieces[position.activeColor][PieceType::KING]);
+			// addCastlingMoves(moves, square, position);
+		// }
 	} else {
 		// Generate quiescent moves
 
