@@ -20,6 +20,7 @@ int Castling::valueOf(int color, int castlingtype) {
 				case CastlingType::QUEENSIDE:
 					return WHITE_QUEENSIDE;
 				default:
+          std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 					throw std::exception();
 			}
 		case Color::BLACK:
@@ -29,9 +30,11 @@ int Castling::valueOf(int color, int castlingtype) {
 				case CastlingType::QUEENSIDE:
 					return BLACK_QUEENSIDE;
 				default:
+          std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 					throw std::exception();
 			}
 		default:
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 			throw std::exception();
 	}
 }
@@ -45,6 +48,7 @@ int Castling::getType(int castling) {
 		case BLACK_QUEENSIDE:
 			return CastlingType::QUEENSIDE;
 		default:
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 			throw std::exception();
 	}
 }
@@ -58,6 +62,7 @@ int Castling::getColor(int castling) {
 		case BLACK_QUEENSIDE:
 			return Color::BLACK;
 		default:
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 			throw std::exception();
 	}
 }

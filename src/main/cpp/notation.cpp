@@ -11,6 +11,7 @@
 #include "castlingtype.h"
 
 #include <sstream>
+#include <iostream>
 
 namespace pulse {
 
@@ -31,7 +32,8 @@ Position Notation::toPosition(const std::string& fen) {
 
 	// halfmove clock and fullmove number are optional
 	if (tokens.size() < 4 || tokens.size() > 6) {
-		throw std::exception();
+    std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
+    return position;
 	}
 
 	unsigned int tokensIndex = 0;
@@ -45,6 +47,7 @@ Position Notation::toPosition(const std::string& fen) {
 		int piece = toPiece(character);
 		if (piece != Piece::NOPIECE) {
 			if (!File::isValid(file) || !Rank::isValid(rank)) {
+        std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 				throw std::invalid_argument("Illegal file or rank");
 			}
 
@@ -57,6 +60,7 @@ Position Notation::toPosition(const std::string& fen) {
 			}
 		} else if (character == '/') {
 			if (file != File::NOFILE || rank == Rank::r1) {
+        std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 				throw std::invalid_argument("Illegal file or rank");
 			}
 
@@ -66,11 +70,13 @@ Position Notation::toPosition(const std::string& fen) {
 			std::string s = {character};
 			int emptySquares = std::stoi(s);
 			if (emptySquares < 1 || 8 < emptySquares) {
+        std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 				throw std::invalid_argument("Illegal number of empty squares");
 			}
 
 			file += emptySquares - 1;
 			if (!File::isValid(file)) {
+        std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 				throw std::invalid_argument("Illegal number of empty squares");
 			}
 
@@ -86,11 +92,13 @@ Position Notation::toPosition(const std::string& fen) {
 	token = tokens[tokensIndex++];
 
 	if (token.length() != 1) {
+    std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 		throw std::exception();
 	}
 
 	int activeColor = toColor(token[0]);
 	if (activeColor == Color::NOCOLOR) {
+    std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 		throw std::exception();
 	}
 	position.setActiveColor(activeColor);
@@ -106,12 +114,14 @@ Position Notation::toPosition(const std::string& fen) {
 			if (castling == Castling::NOCASTLING) {
 				castlingFile = toFile(character);
 				if (castlingFile == File::NOFILE) {
+          std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 					throw std::exception();
 				}
 
 				int color = colorOf(character);
 
 				if (position.pieces[color][PieceType::KING] == 0) {
+          std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 					throw std::exception();
 				}
 
@@ -138,6 +148,7 @@ Position Notation::toPosition(const std::string& fen) {
 
 	if (token.compare("-") != 0) {
 		if (token.length() != 2) {
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 			throw std::exception();
 		}
 
@@ -145,6 +156,7 @@ Position Notation::toPosition(const std::string& fen) {
 		int enPassantRank = toRank(token[1]);
 		if (!(activeColor == Color::BLACK && enPassantRank == Rank::r3)
 			&& !(activeColor == Color::WHITE && enPassantRank == Rank::r6)) {
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 			throw std::exception();
 		}
 
@@ -157,6 +169,7 @@ Position Notation::toPosition(const std::string& fen) {
 
 		int number = std::stoi(token);
 		if (number < 0) {
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 			throw std::exception();
 		}
 
@@ -169,6 +182,7 @@ Position Notation::toPosition(const std::string& fen) {
 
 		int number = std::stoi(token);
 		if (number < 1) {
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 			throw std::exception();
 		}
 
@@ -278,6 +292,7 @@ char Notation::fromColor(int color) {
 			return BLACK_NOTATION;
 		case Color::NOCOLOR:
 		default:
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 			throw std::exception();
 	}
 }
@@ -297,6 +312,7 @@ char Notation::transform(char notation, int color) {
 		case Color::BLACK:
 			return std::tolower(notation);
 		default:
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 			throw std::exception();
 	}
 }
@@ -337,6 +353,7 @@ char Notation::fromPieceType(int piecetype) {
 			return KING_NOTATION;
 		case PieceType::NOPIECETYPE:
 		default:
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 			throw std::exception();
 	}
 }
@@ -376,6 +393,7 @@ char Notation::fromCastlingType(int castlingtype) {
 			return QUEENSIDE_NOTATION;
 		case CastlingType::NOCASTLINGTYPE:
 		default:
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 			throw std::exception();
 	}
 }
@@ -439,6 +457,7 @@ char Notation::fromFile(int file) {
 			return h_NOTATION;
 		case File::NOFILE:
 		default:
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 			throw std::exception();
 	}
 }
@@ -486,6 +505,7 @@ char Notation::fromRank(int rank) {
 			return r8_NOTATION;
 		case Rank::NORANK:
 		default:
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 			throw std::exception();
 	}
 }

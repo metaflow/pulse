@@ -10,8 +10,8 @@
 
 namespace pulse {
 
-MoveEntryList& MoveGenerator::getLegalMoves(Position& position, int depth, bool isCheck) {
-	MoveEntryList& legalMoves = getMoves(position, depth, isCheck);
+  void MoveGenerator::getLegalMoves(Position& position, int depth, bool isCheck, MoveEntryList& legalMoves) {
+  getMoves(position, depth, isCheck, legalMoves);
 
 	int size = legalMoves.size;
 	legalMoves.size = 0;
@@ -30,11 +30,9 @@ MoveEntryList& MoveGenerator::getLegalMoves(Position& position, int depth, bool 
     }
 		position.undoMoveR(move);
 	}
-
-	return legalMoves;
 }
 
-MoveEntryList& MoveGenerator::getMoves(Position& position, int depth, bool isCheck) {
+void MoveGenerator::getMoves(Position& position, int depth, bool isCheck, MoveEntryList& moves) {
 	moves.size = 0;
 
 	if (depth > 0) {
@@ -65,8 +63,6 @@ MoveEntryList& MoveGenerator::getMoves(Position& position, int depth, bool isChe
 
 	// moves.rateFromMVVLVA();
 	// moves.sort();
-
-	return moves;
 }
 
 void MoveGenerator::addMoves(MoveEntryList& list, Position& position) {

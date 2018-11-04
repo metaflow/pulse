@@ -41,7 +41,7 @@ int Evaluation::evaluate(Position& position) {
 }
 
 int Evaluation::evaluateMaterial(int color, Position& position) {
-	int material = position.material[color];
+	int material = 0; // position.material[color];
 
 	// Add bonus for bishop pair
 	if (Bitboard::size(position.pieces[color][PieceType::BISHOP]) >= 2) {

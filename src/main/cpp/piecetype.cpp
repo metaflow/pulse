@@ -7,6 +7,8 @@
 
 #include "piecetype.h"
 
+#include <iostream>
+
 namespace pulse {
 
 const std::array<int, PieceType::VALUES_SIZE> PieceType::values = {
@@ -36,6 +38,7 @@ bool PieceType::isSliding(int piecetype) {
 		case KING:
 			return false;
 		default:
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 			throw std::exception();
 	}
 }

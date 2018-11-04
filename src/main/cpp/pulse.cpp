@@ -16,13 +16,14 @@
 
 namespace pulse {
 
-std::pair<int, int> toXY(int square) {
-  return std::make_pair(square % 16, square / 16);
-}
+// std::pair<int, int> toXY(int square) {
+  // return std::make_pair(square % 16, square / 16);
+// }
 
 void printSquare(int square) {
-  std::cout << square << ' ' << Notation::fromSquare(square) << " ("
-            << toXY(square).first << ", " << toXY(square).second << ")";
+  int x = square % 16;
+  int y = square / 16;
+  std::cout << square << ' ' << Notation::fromSquare(square) << " (" << x << ", " << y << ")";
 }
 
 void printMove(int m) {
@@ -45,31 +46,39 @@ void dfs(std::unique_ptr<Position>                           p,
          std::unordered_set<std::string>& visited) {
   if (depth < 0) return;
   MoveGenerator             moveGenerator;
-  std::shared_ptr<Position> y(new Position(*p));
-  MoveEntryList& moves = moveGenerator.getLegalMoves(*y, 1, y->isCheck());
+  MoveEntryList moves;
+  moveGenerator.getLegalMoves(*p, 1, p->isCheck(), moves);
   for (int i = 0; i < moves.size; i++) {
     int                       m = moves.entries[i].move;
-    auto                      wsource = toXY(Move::getOriginSquare(m));
-    auto                      wtarget = toXY(Move::getTargetSquare(m));
-    std::unique_ptr<Position> t(new Position(*p));
-    t->makeMove(m);
+    int originSquare = Move::getOriginSquare(m);
+    int ox = originSquare % 16;
+    int oy = originSquare / 16;
+    int targetSquare = Move::getTargetSquare(m);
+    int tx = targetSquare % 16;
+    int ty = targetSquare / 16;
+    // auto                      wsource = toXY(Move::getOriginSquare(m));
+    // auto                      wtarget = toXY(Move::getTargetSquare(m));
     int originPiece = Move::getOriginPiece(m);
     // if ((originPiece != Piece::WHITE_PAWN && t->touched[originPiece] > 1) ||
         // t->touched[originPiece] > 2)
       // continue;
-   std::shared_ptr<Position> y(new Position(*p));
-    y->makeMove(m);
-    MoveGenerator ym;
-    MoveEntryList& bmoves = ym.getLegalMoves(*y, 1, y->isCheck());
+   std::shared_ptr<Position> t(new Position(*p));
+    t->makeMove(m);
+    MoveEntryList bmoves;
+    moveGenerator.getLegalMoves(*t, 1, t->isCheck(), bmoves);
     // find symmeric move for black.
     int w = Move::NOMOVE;
     for (int j = 0; j < bmoves.size; j++) {
       int  bm = bmoves.entries[j].move;
-      auto bsource = toXY(Move::getOriginSquare(bm));
-      auto btarget = toXY(Move::getTargetSquare(bm));
-      if (bsource.first != wsource.first || btarget.first != wtarget.first ||
-          (bsource.second != 7 - wsource.second) ||
-          (btarget.second != 7 - wtarget.second))
+      int originSquare2 = Move::getOriginSquare(bm);
+      int o2x = originSquare2 % 16;
+      int o2y = originSquare2 / 16;
+      int targetSquare2 = Move::getTargetSquare(bm);
+      int t2x = targetSquare2 % 16;
+      int t2y = targetSquare2 / 16;
+      // auto bsource = toXY(Move::getOriginSquare(bm));
+      // auto btarget = toXY(Move::getTargetSquare(bm));
+      if (ox != o2x || tx != t2x || (oy != 7 - o2y) || (ty != 7 - t2y))
         continue;
       if (Move::getType(m) == MoveType::PAWNPROMOTION) {
         if (Move::getPromotion(m) != Move::getPromotion(bm)) { continue; }
@@ -232,7 +241,9 @@ void Pulse::receivePosition(std::istringstream& input) {
     *currentPosition = Notation::toPosition(Notation::STANDARDPOSITION);
 
     if (input >> token) {
-      if (token != "moves") { throw std::exception(); }
+      if (token != "moves") {
+        std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
+        throw std::exception(); }
     }
   } else if (token == "fen") {
     std::string fen;
@@ -247,6 +258,7 @@ void Pulse::receivePosition(std::istringstream& input) {
 
     *currentPosition = Notation::toPosition(fen);
   } else {
+    std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
     throw std::exception();
   }
 
@@ -254,8 +266,8 @@ void Pulse::receivePosition(std::istringstream& input) {
 
   while (input >> token) {
     // Verify moves
-    MoveEntryList& moves = moveGenerator.getLegalMoves(
-        *currentPosition, 1, currentPosition->isCheck());
+    MoveEntryList moves;
+    moveGenerator.getLegalMoves(*currentPosition, 1, currentPosition->isCheck(), moves);
     bool found = false;
     for (int i = 0; i < moves.size; i++) {
       int move = moves.entries[i].move;
@@ -266,7 +278,9 @@ void Pulse::receivePosition(std::istringstream& input) {
       }
     }
 
-    if (!found) { throw std::exception(); }
+    if (!found) {
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
+      throw std::exception(); }
   }
 
   // Don't start searching though!
@@ -284,6 +298,7 @@ void Pulse::receiveGo(std::istringstream& input) {
     if (input >> searchDepth) {
       search->newDepthSearch(*currentPosition, searchDepth);
     } else {
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
       throw std::exception();
     }
   } else if (token == "nodes") {
@@ -308,15 +323,27 @@ void Pulse::receiveGo(std::istringstream& input) {
 
     do {
       if (token == "wtime") {
-        if (!(input >> whiteTimeLeft)) { throw std::exception(); }
+        if (!(input >> whiteTimeLeft)) {
+          std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
+          throw std::exception(); }
       } else if (token == "winc") {
-        if (!(input >> whiteTimeIncrement)) { throw std::exception(); }
+        if (!(input >> whiteTimeIncrement)) {
+          std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
+          throw std::exception(); }
       } else if (token == "btime") {
-        if (!(input >> blackTimeLeft)) { throw std::exception(); }
+        if (!(input >> blackTimeLeft)) {
+          std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
+          throw std::exception(); }
       } else if (token == "binc") {
-        if (!(input >> blackTimeIncrement)) { throw std::exception(); }
+        if (!(input >> blackTimeIncrement)) {
+
+          std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
+          throw std::exception(); }
       } else if (token == "movestogo") {
-        if (!(input >> searchMovesToGo)) { throw std::exception(); }
+        if (!(input >> searchMovesToGo)) {
+
+          std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
+          throw std::exception(); }
       } else if (token == "ponder") {
         ponder = true;
       }

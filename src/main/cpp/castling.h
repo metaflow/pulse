@@ -8,6 +8,7 @@
 #define PULSE_CASTLING_H
 
 #include <array>
+#include <iostream>
 
 namespace pulse {
 

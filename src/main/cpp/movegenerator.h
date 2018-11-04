@@ -14,12 +14,11 @@ namespace pulse {
 
 class MoveGenerator {
 public:
-	MoveEntryList& getLegalMoves(Position& position, int depth, bool isCheck);
+	void getLegalMoves(Position& position, int depth, bool isCheck, MoveEntryList& moves);
 
-	MoveEntryList& getMoves(Position& position, int depth, bool isCheck);
+	void getMoves(Position& position, int depth, bool isCheck, MoveEntryList& moves);
 
 private:
-	MoveEntryList moves;
 
 	void addMoves(MoveEntryList& list, Position& position);
 

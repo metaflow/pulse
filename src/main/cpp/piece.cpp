@@ -9,6 +9,8 @@
 #include "color.h"
 #include "piecetype.h"
 
+#include <iostream>
+
 namespace pulse {
 
 const std::array<int, Piece::VALUES_SIZE> Piece::values = {
@@ -53,6 +55,7 @@ int Piece::valueOf(int color, int piecetype) {
 				case PieceType::KING:
 					return WHITE_KING;
 				default:
+          std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 					throw std::exception();
 			}
 		case Color::BLACK:
@@ -70,9 +73,11 @@ int Piece::valueOf(int color, int piecetype) {
 				case PieceType::KING:
 					return BLACK_KING;
 				default:
+          std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 					throw std::exception();
 			}
 		default:
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 			throw std::exception();
 	}
 }
@@ -98,7 +103,9 @@ int Piece::getType(int piece) {
 		case BLACK_KING:
 			return PieceType::KING;
 		default:
-			throw std::exception();
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
+      return PieceType::NOPIECETYPE;
+			// throw std::exception();
 	}
 }
 
@@ -119,6 +126,7 @@ int Piece::getColor(int piece) {
 		case BLACK_KING:
 			return Color::BLACK;
 		default:
+      std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 			throw std::exception();
 	}
 }

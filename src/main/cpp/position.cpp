@@ -65,7 +65,7 @@ Position::Position(const Position& position) : Position() {
   this->board = position.board;
   this->pieces = position.pieces;
 
-  this->material = position.material;
+  // this->material = position.material;
 
   this->castlingRights = position.castlingRights;
   this->enPassantSquare = position.enPassantSquare;
@@ -86,7 +86,7 @@ Position& Position::operator=(const Position& position) {
   this->board = position.board;
   this->pieces = position.pieces;
 
-  this->material = position.material;
+  // this->material = position.material;
 
   this->castlingRights = position.castlingRights;
   this->enPassantSquare = position.enPassantSquare;
@@ -108,7 +108,7 @@ Position& Position::operator=(const Position& position) {
 bool Position::operator==(const Position& position) const {
   return this->board == position.board && this->pieces == position.pieces
 
-         && this->material == position.material
+         // && this->material == position.material
 
          && this->castlingRights == position.castlingRights &&
          this->enPassantSquare == position.enPassantSquare &&
@@ -199,7 +199,7 @@ void Position::put(int piece, int square) {
 
   board[square] = piece;
   pieces[color][piecetype] = Bitboard::add(square, pieces[color][piecetype]);
-  material[color] += PieceType::getValue(piecetype);
+  // material[color] += PieceType::getValue(piecetype);
 
   // zobristKey ^= zobrist.board[piece][square];
 }
@@ -210,7 +210,7 @@ void Position::putR(int piece, int square) {
 
     board[square] = piece;
     pieces[color][piecetype] = Bitboard::add(square, pieces[color][piecetype]);
-    material[color] += PieceType::getValue(piecetype);
+    // material[color] += PieceType::getValue(piecetype);
 }
 
 /**
@@ -228,7 +228,7 @@ int Position::remove(int square) {
 
   board[square] = Piece::NOPIECE;
   pieces[color][piecetype] = Bitboard::remove(square, pieces[color][piecetype]);
-  material[color] -= PieceType::getValue(piecetype);
+  // material[color] -= PieceType::getValue(piecetype);
 
   // zobristKey ^= zobrist.board[piece][square];
 
@@ -243,7 +243,7 @@ int Position::removeR(int square) {
 
     board[square] = Piece::NOPIECE;
     pieces[color][piecetype] = Bitboard::remove(square, pieces[color][piecetype]);
-    material[color] -= PieceType::getValue(piecetype);
+    // material[color] -= PieceType::getValue(piecetype);
 
     return piece;
 }
@@ -319,7 +319,9 @@ void Position::makeMove(int move) {
         rookOriginSquare = Square::a8;
         rookTargetSquare = Square::d8;
         break;
-      default: throw std::exception();
+      default:
+        std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
+        throw std::exception();
     }
 
     int rookPiece = remove(rookOriginSquare);
@@ -636,16 +638,13 @@ bool Position::isAttacked(int targetSquare, int attackerColor) {
 bool Position::isAttackedR(int targetSquare, int attackerColor) {
   return
          // The queen moves like a bishop, so check both piece types
-         isAttacked(targetSquare,
+         isAttackedBishop(targetSquare,
                        Piece::valueOf(attackerColor, PieceType::BISHOP),
-                       Piece::valueOf(attackerColor, PieceType::QUEEN),
-                       Square::bishopDirections)
-
+                       Piece::valueOf(attackerColor, PieceType::QUEEN))
          // The queen moves like a rook, so check both piece types
-         || isAttacked(targetSquare,
+         || isAttackedRook(targetSquare,
                        Piece::valueOf(attackerColor, PieceType::ROOK),
-                       Piece::valueOf(attackerColor, PieceType::QUEEN),
-                        Square::rookDirections);
+                       Piece::valueOf(attackerColor, PieceType::QUEEN));
 }
 
 /**
@@ -675,7 +674,6 @@ bool Position::isAttacked(int targetSquare, int attackerPiece, int queenPiece,
 
     while (Square::isValid(attackerSquare)) {
       int piece = board[attackerSquare];
-
       if (Piece::isValid(piece)) {
         if (piece == attackerPiece || piece == queenPiece) { return true; }
 
@@ -689,6 +687,43 @@ bool Position::isAttacked(int targetSquare, int attackerPiece, int queenPiece,
   return false;
 }
 
+bool Position::isAttackedRook(int targetSquare, int attackerPiece, int queenPiece) {
+  for (auto direction : Square::rookDirections) {
+      int attackerSquare = targetSquare + direction;
+
+      while (Square::isValid(attackerSquare)) {
+        int piece = board[attackerSquare];
+        if (Piece::isValid(piece)) {
+          if (piece == attackerPiece || piece == queenPiece) { return true; }
+
+          break;
+        } else {
+          attackerSquare += direction;
+        }
+      }
+    }
+
+    return false;
+}
+
+bool Position::isAttackedBishop(int targetSquare, int attackerPiece, int queenPiece) {
+    for (auto direction : Square::bishopDirections) {
+      int attackerSquare = targetSquare + direction;
+
+      while (Square::isValid(attackerSquare)) {
+        int piece = board[attackerSquare];
+        if (Piece::isValid(piece)) {
+          if (piece == attackerPiece || piece == queenPiece) { return true; }
+
+          break;
+        } else {
+          attackerSquare += direction;
+        }
+      }
+    }
+
+    return false;
+}
 bool Position::isPromoted(int square) { return this->promoted[square]; }
 
 }  // namespace pulse

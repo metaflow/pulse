@@ -26,7 +26,7 @@ public:
 
 	std::array<std::array<uint64_t, PieceType::VALUES_SIZE>, Color::VALUES_SIZE> pieces = {};
 
-	std::array<int, Color::VALUES_SIZE> material = {};
+	// std::array<int, Color::VALUES_SIZE> material = {};
 
 	int castlingRights = Castling::NOCASTLING;
 	int enPassantSquare = Square::NOSQUARE;
@@ -127,6 +127,8 @@ private:
 
 	bool isAttacked(int targetSquare, int attackerPiece, const std::vector<int>& directions);
 	bool isAttacked(int targetSquare, int attackerPiece, int queenPiece, const std::vector<int>& directions);
+	bool isAttackedRook(int targetSquare, int attackerPiece, int queenPiece);
+	bool isAttackedBishop(int targetSquare, int attackerPiece, int queenPiece);
 };
 
 }
