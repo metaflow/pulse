@@ -42,27 +42,98 @@ void printMove(int m) {
   std::cout << std::endl;
 }
 
-void dfs(std::unique_ptr<Position>                           p,
+int sSquare(int s) {
+  if (!Square::isValid(s)) return s;
+  int x = Square::getFile(s);
+  int y = Square::getRank(s);
+  y = 7 - y;
+  return Square::valueOf(x, y);
+}
+
+int sPiece(int p) {
+  if (!Piece::isValid(p)) return p;
+  return Piece::valueOf(Color::opposite(Piece::getColor(p)), Piece::getType(p));
+}
+
+int sMove(int move) {
+  int type = Move::getType(move);
+  int originSquare = Move::getOriginSquare(move);
+  int targetSquare = Move::getTargetSquare(move);
+  int originPiece = Move::getOriginPiece(move);
+  int targetPiece = Move::getTargetPiece(move);
+  int promotion = Move::getPromotion(move);
+  return Move::valueOf(type, sSquare(originSquare), sSquare(targetSquare),
+                       sPiece(originPiece), sPiece(targetPiece),
+                       promotion);
+}
+
+  bool record(int m, std::shared_ptr<Position> t,
+            std::unordered_map<int, std::shared_ptr<Position>>& z) {
+  int piece = Move::getOriginPiece(m);
+  if (t->isPromoted(Move::getTargetSquare(m))) piece = Piece::NOPIECE;
+  if (z.count(piece)) return false;
+  auto s = Notation::fromPosition(*t);
+  std::cout << std::endl;
+  std::cout << "checkmate ";
+  if (piece != Piece::NOPIECE)
+    std::cout << Notation::fromPiece(piece);
+  else
+    std::cout << Notation::fromPiece(Move::getOriginPiece(m)) << " promoted";
+  std::cout << std::endl;
+  std::cout << s << std::endl;
+  std::cout << "promoted squares ";
+  for (int i = 0; i < Square::VALUES_LENGTH; i++) {
+    if (t->isPromoted(i)) std::cout << Notation::fromSquare(i) << ' ';
+  }
+  std::cout << std::endl;
+  // std::cout << t->movedPawns << " pawns touched" << std::endl;
+  printMove(m);
+  std::cout << t->moves.size() << " moves" << std::endl;
+  int turn = 1;
+  for (auto x : t->moves) {
+    turn++;
+    if (turn % 2 == 0) std::cout << ' ' << turn / 2 << ".";
+    std::cout << " ";
+    int type = Piece::getType(Move::getOriginPiece(x));
+    if (type != PieceType::PAWN) { std::cout << Notation::fromPieceType(type); }
+    std::cout << Notation::fromSquare(Move::getOriginSquare(x));
+    if (Move::getTargetPiece(x) != Piece::NOPIECE) { std::cout << 'x'; }
+    std::cout << Notation::fromSquare(Move::getTargetSquare(x));
+    if (Move::getType(x) == MoveType::PAWNPROMOTION) {
+      std::cout << '=' << Notation::fromPiece(Move::getPromotion(x));
+    }
+    if (Move::getType(x) == MoveType::CASTLING) {
+      std::cout << "CASTLING!!!" << std::endl;
+    }
+  }
+  std::cout << "#" << std::endl;
+  z.emplace(piece, new Position(*t));
+  std::cout << "found " << z.size() << " answers " << std::endl;
+  return z.size() == 7;
+}
+
+bool dfs(std::unique_ptr<Position>                           p,
          std::unordered_map<int, std::shared_ptr<Position>>& z, int depth,
          std::unordered_map<uint64_t, int>& visited) {
-  if (depth < 0) return;
+  if (depth < 0) return false;
   MoveGenerator moveGenerator;
   MoveEntryList moves;
   moveGenerator.getLegalMoves(*p, 1, p->isCheck(), moves);
   for (int i = 0; i < moves.size; i++) {
-    int m = moves.entries[i].move;
-    int originSquare = Move::getOriginSquare(m);
-    int ox = originSquare % 16;
-    int oy = originSquare / 16;
-    int targetSquare = Move::getTargetSquare(m);
-    int tx = targetSquare % 16;
-    int ty = targetSquare / 16;
-    int originPiece = Move::getOriginPiece(m);
-        std::shared_ptr<Position> t(new Position(*p));
+    int                       m = moves.entries[i].move;
+    int                       originSquare = Move::getOriginSquare(m);
+    int                       ox = originSquare % 16;
+    int                       oy = originSquare / 16;
+    int                       targetSquare = Move::getTargetSquare(m);
+    int                       tx = targetSquare % 16;
+    int                       ty = targetSquare / 16;
+    int                       originPiece = Move::getOriginPiece(m);
+    std::shared_ptr<Position> t(new Position(*p));
     t->makeMove(m);
     if ((originPiece != Piece::WHITE_PAWN && p->touched[originPiece] > 1) ||
-        t->touched[originPiece] > 3)
+        t->touched[originPiece] > 2)
       continue;
+    /*
     MoveEntryList bmoves;
     moveGenerator.getLegalMoves(*t, 1, t->isCheck(), bmoves);
     // find symmeric move for black.
@@ -84,65 +155,37 @@ void dfs(std::unique_ptr<Position>                           p,
       }
       w = bm;
     }
-    if (w == Move::NOMOVE) {
-      // checkmate?
-      if (t->isCheck() && bmoves.size == 0) {
-        int piece = Move::getOriginPiece(m);
-        if (t->isPromoted(Move::getTargetSquare(m))) piece = Piece::NOPIECE;
-        if (z.count(piece)) continue;
-        auto s = Notation::fromPosition(*t);
-        std::cout << std::endl;
-        std::cout << "checkmate ";
-        if (piece != Piece::NOPIECE)
-          std::cout << Notation::fromPiece(piece);
-        else
-          std::cout << Notation::fromPiece(Move::getOriginPiece(m))
-                    << " promoted";
-        std::cout << std::endl;
-        std::cout << s << std::endl;
-        std::cout << "promoted squares ";
-        for (int i = 0; i < Square::VALUES_LENGTH; i++) {
-          if (t->isPromoted(i)) std::cout << Notation::fromSquare(i) << ' ';
-        }
-        std::cout << std::endl;
-        // std::cout << t->movedPawns << " pawns touched" << std::endl;
-        printMove(m);
-        std::cout << t->moves.size() << " moves" << std::endl;
-        int turn = 1;
-        for (auto x : t->moves) {
-          turn++;
-          if (turn % 2 == 0) std::cout << ' ' << turn / 2 << ".";
-          std::cout << " ";
-          int type = Piece::getType(Move::getOriginPiece(x));
-          if (type != PieceType::PAWN) {
-            std::cout << Notation::fromPieceType(type);
-          }
-          std::cout << Notation::fromSquare(Move::getOriginSquare(x));
-          if (Move::getTargetPiece(x) != Piece::NOPIECE) { std::cout << 'x'; }
-          std::cout << Notation::fromSquare(Move::getTargetSquare(x));
-          if (Move::getType(x) == MoveType::PAWNPROMOTION) {
-            std::cout << '=' << Notation::fromPiece(Move::getPromotion(x));
-          }
-          if (Move::getType(x) == MoveType::CASTLING) {
-            std::cout << "CASTLING!!!" << std::endl;
-          }
-        }
-        std::cout << "#" << std::endl;
-        z.emplace(piece, new Position(*t));
-        std::cout << "found " << z.size() << " answers " << std::endl;
+    */
+    int  w = sMove(m);
+    bool check = t->isCheck();
+    if (check) {
+      MoveEntryList bmoves;
+      moveGenerator.getLegalMoves(*t, 1, check, bmoves);
+      if (bmoves.size == 0) { if (record(m, t, z)) return true; }
+      bool found = false;
+      for (int j = 0; j < bmoves.size; j++) {
+        found = found || (w == moves.entries[i].move);
       }
+      if (!found) continue;
     } else {
-      t->makeMove(w);
-      auto s = t->hash();
-      //auto s = Notation::fromPosition(*t);
-      if (visited[s] < depth) {
-        visited[s] = depth;
-        std::unique_ptr<Position> a(new Position(*t));
-        dfs(std::move(a), z, depth - 1, visited);
+      if (t->board[Move::getOriginSquare(w)] != Move::getOriginPiece(w) ||
+          !moveGenerator.isValidMove(*t, check, w)) {
+        continue;
+      }
+    }
+    t->makeMove(w);
+    auto s = t->hash();
+    // auto s = Notation::fromPosition(*t);
+    if (visited[s] < depth) {
+      visited[s] = depth;
+      std::unique_ptr<Position> a(new Position(*t));
+      if (dfs(std::move(a), z, depth - 1, visited)) {
+        return true;
       }
     }
   }
-}
+  return false;
+}  // namespace pulse
 
 void Pulse::run() {
   std::cin.exceptions(std::iostream::eofbit | std::iostream::failbit |
@@ -181,10 +224,10 @@ void Pulse::run() {
   std::unordered_map<int, std::shared_ptr<Position>> z;
   int                                                max_moves = 0;
   int                                                d = 1;
-  while (z.size() < 7 && d < 5) {
+  while (z.size() < 7) {
     std::cout << "max depth " << d << std::endl;
     std::unordered_map<uint64_t, int> visited;
-    std::unique_ptr<Position>       p(
+    std::unique_ptr<Position>         p(
         new Position(Notation::toPosition(Notation::STANDARDPOSITION)));
     dfs(std::move(p), z, d, visited);
     d++;

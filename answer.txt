@@ -1,13 +1,60 @@
-1. c2c4 c7c5 2. Qd1a4 Qd8a5 3. Qa4c6 Qa5c3 4. Qc6xc8#
+checkmate Q
+rnQ1kbnr/pp1ppppp/8/2p5/2P5/2q5/PP1PPPPP/RNB1KBNR b KQkq - 0 4
+promoted squares
+type 0 from 82 c6 (2, 5) to 114 c8 (2, 7) piece 4 Q target 8 promotion 6 p
+7 moves
+ 1. c2c4 c7c5 2. Qd1a4 Qd8a5 3. Qa4c6 Qa5c3 4. Qc6xc8#
+found 1 answers
+max depth 4
+max depth 5
 
-1. c2c4 c7c5 2. d2d4 d7d5 3. c4xd5 c5xd4 4. d5d6 d4d3 5. d6xe7 d3xe2 6. e7xd8=Q#
+checkmate P promoted
+rnbQkbnr/pp3ppp/8/8/8/8/PP2pPPP/RNBQKBNR b KQkq - 0 6
+promoted squares d8
+type 2 from 100 e7 (4, 6) to 115 d8 (3, 7) piece 0 P target 10 promotion 4 Q
+11 moves
+ 1. c2c4 c7c5 2. d2d4 d7d5 3. c4xd5 c5xd4 4. d5d6 d4d3 5. d6xe7 d3xe2 6. e7xd8=Q#
+found 2 answers
 
-1. Ng1h3 Ng8h6 2. Nh3g5 Nh6g4 3. Ng5xh7 Ng4xh2 4. Nh7xf8 Nh2xf1 5. Nf8g6 Nf1g3 6. Rh1xh8#
+checkmate N
+r1b1kbnr/ppNp1ppp/4p3/7q/3n3Q/4P3/PPPP1PPP/R1B1KBNR b KQkq - 0 6
+promoted squares
+type 0 from 67 d5 (3, 4) to 98 c7 (2, 6) piece 1 N target 6 promotion 6 p
+11 moves
+ 1. e2e3 e7e6 2. Nb1c3 Nb8c6 3. Nc3d5 Nc6d4 4. Qd1g4 Qd8g5 5. Qg4h4 Qg5h5 6. Nd5xc7#
+found 3 answers
 
-1. c2c3 c7c6 2. d2d4 d7d5 3. Bc1e3 Bc8e6 4. Ke1d2 Ke8d7 5. Kd2d3 Kd7d6 6. Qd1d2 Qd8d7 7. Be3f4#
+checkmate P
+rnbqkbn1/pppppP1R/8/8/8/6p1/PPPPPP1r/RNBQKBN1 b Qq - 0 6
+promoted squares
+type 0 from 86 g6 (6, 5) to 101 f7 (5, 6) piece 0 P target 6 promotion 6 p
+11 moves
+ 1. g2g4 g7g5 2. h2h4 h7h5 3. h4xg5 h5xg4 4. g5g6 g4g3 5. Rh1h7 Rh8h2 6. g6xf7#
+found 4 answers
 
-1. b2b3 b7b6 2. g2g3 g7g6 3. Ng1h3 Ng8h6 4. Nh3g5 Nh6g4 5. Ng5xh7 Ng4xh2 6. Nh7f6 Nh2f3 7. Bc1b2 Bc8b7 8. Nf6xe8#
+checkmate R
+rnbqk2R/ppppppp1/6N1/8/8/6n1/PPPPPPP1/RNBQK3 b Qq - 0 6
+promoted squares
+type 0 from 7 h1 (7, 0) to 119 h8 (7, 7) piece 3 R target 9 promotion 6 p
+11 moves
+ 1. Ng1h3 Ng8h6 2. Nh3g5 Nh6g4 3. Ng5xh7 Ng4xh2 4. Nh7xf8 Nh2xf1 5. Nf8g6 Nf1g3 6. Rh1xh8#
+found 5 answers
+max depth 6
 
-1. f2f4 f7f5 2. g2g4 g7g5 3. f4xg5 f5xg4 4. g5g6 g4g3 5. Bf1g2 Bf8g7 6. Bg2f3 Bg7f6 7. Bf3h5 Bf6h4 8. g6g7#
+checkmate B
+rn3bnr/pp1qpppp/2pkb3/3p4/3P1B2/2PK4/PP1QPPPP/RN3BNR b - - 9 7
+promoted squares
+type 0 from 36 e3 (4, 2) to 53 f4 (5, 3) piece 2 B target 12 promotion 6 p
+13 moves
+ 1. c2c3 c7c6 2. d2d4 d7d5 3. Bc1e3 Bc8e6 4. Ke1d2 Ke8d7 5. Kd2d3 Kd7d6 6. Qd1d2 Qd8d7 7. Be3f4#
+found 6 answers
+max depth 7
+max depth 8
 
-1. d2d3 d7d6 2. Ke1d2 Ke8d7 3. Kd2c3 Kd7c6 4. Kc3b3 Kc6b6 5. Kb3a3 Kb6a6 6. Bc1e3 Bc8e6 7. Be3b6 Be6b3 8. a2xb3 a7xb6 9. Ka3b4#
+checkmate K
+rn1q1bnr/1pp1pppp/kp1p4/8/1K6/1P1P4/1PP1PPPP/RN1Q1BNR b - - 1 9
+promoted squares
+type 0 from 32 a3 (0, 2) to 49 b4 (1, 3) piece 5 K target 12 promotion 6 p
+17 moves
+ 1. d2d3 d7d6 2. Ke1d2 Ke8d7 3. Kd2c3 Kd7c6 4. Kc3b3 Kc6b6 5. Kb3a3 Kb6a6 6. Bc1e3 Bc8e6 7. Be3b6 Be6b3 8. a2xb3 a7xb6 9. Ka3b4#
+found 7 answers
