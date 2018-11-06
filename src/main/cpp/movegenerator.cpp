@@ -100,6 +100,7 @@ void MoveGenerator::addMoves(MoveEntryList& list, Position& position) {
 void MoveGenerator::addMoves(MoveEntryList& list, int originSquare, const std::vector<int>& directions,
 							 Position& position) {
 	int originPiece = position.board[originSquare];
+  if (originPiece == Piece::NOPIECE) return;
 	bool sliding = PieceType::isSliding(Piece::getType(originPiece));
 	int oppositeColor = Color::opposite(Piece::getColor(originPiece));
 

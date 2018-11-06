@@ -39,7 +39,8 @@ bool PieceType::isSliding(int piecetype) {
 			return false;
 		default:
       std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
-			throw std::exception();
+      std::cerr << piecetype << " piecetype" << std::endl;
+      return false;
 	}
 }
 

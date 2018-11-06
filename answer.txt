@@ -1,0 +1,13 @@
+1. c2c4 c7c5 2. Qd1a4 Qd8a5 3. Qa4c6 Qa5c3 4. Qc6xc8#
+
+1. c2c4 c7c5 2. d2d4 d7d5 3. c4xd5 c5xd4 4. d5d6 d4d3 5. d6xe7 d3xe2 6. e7xd8=Q#
+
+1. Ng1h3 Ng8h6 2. Nh3g5 Nh6g4 3. Ng5xh7 Ng4xh2 4. Nh7xf8 Nh2xf1 5. Nf8g6 Nf1g3 6. Rh1xh8#
+
+1. c2c3 c7c6 2. d2d4 d7d5 3. Bc1e3 Bc8e6 4. Ke1d2 Ke8d7 5. Kd2d3 Kd7d6 6. Qd1d2 Qd8d7 7. Be3f4#
+
+1. b2b3 b7b6 2. g2g3 g7g6 3. Ng1h3 Ng8h6 4. Nh3g5 Nh6g4 5. Ng5xh7 Ng4xh2 6. Nh7f6 Nh2f3 7. Bc1b2 Bc8b7 8. Nf6xe8#
+
+1. f2f4 f7f5 2. g2g4 g7g5 3. f4xg5 f5xg4 4. g5g6 g4g3 5. Bf1g2 Bf8g7 6. Bg2f3 Bg7f6 7. Bf3h5 Bf6h4 8. g6g7#
+
+1. d2d3 d7d6 2. Ke1d2 Ke8d7 3. Kd2c3 Kd7c6 4. Kc3b3 Kc6b6 5. Kb3a3 Kb6a6 6. Bc1e3 Bc8e6 7. Be3b6 Be6b3 8. a2xb3 a7xb6 9. Ka3b4#

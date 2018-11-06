@@ -32,7 +32,7 @@ public:
 	int enPassantSquare = Square::NOSQUARE;
 	int activeColor = Color::WHITE;
 	int halfmoveClock = 0;
-  // std::vector<int> touched;
+  std::array<int, Piece::VALUES_SIZE> touched = {};
 
 	uint64_t zobristKey = 0;
   std::vector<int> moves;
@@ -82,6 +82,7 @@ public:
 	bool isAttackedR(int targetSquare, int attackerColor);
 
   bool isPromoted(int square);
+  uint64_t hash();
 
 private:
   /*

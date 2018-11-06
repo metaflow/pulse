@@ -8,6 +8,7 @@
 #include "piece.h"
 #include "color.h"
 #include "piecetype.h"
+#include "stack.h"
 
 #include <iostream>
 
@@ -56,6 +57,7 @@ int Piece::valueOf(int color, int piecetype) {
 					return WHITE_KING;
 				default:
           std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
+          printStack();
 					throw std::exception();
 			}
 		case Color::BLACK:
@@ -73,6 +75,7 @@ int Piece::valueOf(int color, int piecetype) {
 				case PieceType::KING:
 					return BLACK_KING;
 				default:
+          printStack();
           std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
 					throw std::exception();
 			}
@@ -104,6 +107,8 @@ int Piece::getType(int piece) {
 			return PieceType::KING;
 		default:
       std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
+      std::cerr << "piece " << piece << std::endl;
+      printStack();
       return PieceType::NOPIECETYPE;
 			// throw std::exception();
 	}
@@ -127,6 +132,7 @@ int Piece::getColor(int piece) {
 			return Color::BLACK;
 		default:
       std::cerr << "ERROR " << __FILE__ << ' ' << __LINE__ << std::endl;
+      printStack();
 			throw std::exception();
 	}
 }
