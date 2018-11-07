@@ -67,7 +67,7 @@ int sMove(int move) {
                        promotion);
 }
 
-  bool record(int m, std::shared_ptr<Position> t,
+bool record(int m, std::shared_ptr<Position> t,
             std::unordered_map<int, std::shared_ptr<Position>>& z) {
   int piece = Move::getOriginPiece(m);
   if (t->isPromoted(Move::getTargetSquare(m))) piece = Piece::NOPIECE;
@@ -131,11 +131,11 @@ bool dfs(std::unique_ptr<Position>                           p,
     std::shared_ptr<Position> t(new Position(*p));
     t->makeMove(m);
     if ((originPiece != Piece::WHITE_PAWN && p->touched[originPiece] > 1) ||
-        t->touched[originPiece] > 2)
+        t->touched[originPiece] > 3)
       continue;
-    /*
     MoveEntryList bmoves;
-    moveGenerator.getLegalMoves(*t, 1, t->isCheck(), bmoves);
+    bool check = t->isCheck();
+    moveGenerator.getLegalMoves(*t, 1, check, bmoves);
     // find symmeric move for black.
     int w = Move::NOMOVE;
     for (int j = 0; j < bmoves.size; j++) {
@@ -155,9 +155,14 @@ bool dfs(std::unique_ptr<Position>                           p,
       }
       w = bm;
     }
-    */
+    if (w == Move::NOMOVE) {
+      if (bmoves.size == 0) {
+        if (record(m, t, z)) return true;
+      }
+      continue;
+    }
+    /*
     int  w = sMove(m);
-    bool check = t->isCheck();
     if (check) {
       MoveEntryList bmoves;
       moveGenerator.getLegalMoves(*t, 1, check, bmoves);
@@ -173,6 +178,7 @@ bool dfs(std::unique_ptr<Position>                           p,
         continue;
       }
     }
+    */
     t->makeMove(w);
     auto s = t->hash();
     // auto s = Notation::fromPosition(*t);
